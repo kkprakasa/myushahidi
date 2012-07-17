@@ -1,0 +1,378 @@
+<!-- main body -->
+<div id="main" class="clearingfix">
+
+
+			<!-- additional content -->
+			<?php
+			if (Kohana::config('settings.allow_reports'))
+			{
+				?>
+				
+					<h5 class="lapor"><?php echo Kohana::lang('ui_main.how_to_report'); ?></h5>
+					<div class="additional-content">
+					<ul>
+						<?php if (!empty($phone_array)) 
+						{ ?><li><?php echo Kohana::lang('ui_main.report_option_1')." "; ?> <?php foreach ($phone_array as $phone) {
+							echo "<strong>". $phone ."</strong>";
+							if ($phone != end($phone_array)) {
+								echo " or ";
+							}
+						} ?></li><?php } ?>
+						<?php if (!empty($report_email)) 
+						{ ?><li id="surel"><img width="10px" src="<?php echo url::file_loc('img'); ?>media/img/surel.jpg" /><?php echo Kohana::lang('ui_main.report_option_2')." "; ?> <a href="mailto:<?php echo $report_email?>"><?php echo $report_email?></a></li><?php } ?>
+						<?php if (!empty($twitter_hashtag_array)) 
+									{ ?><li id="twit"><img width="10px" src="<?php echo url::file_loc('img'); ?>media/img/twit.jpg" /><?php echo Kohana::lang('ui_main.report_option_3')." "; ?> <?php foreach ($twitter_hashtag_array as $twitter_hashtag) {
+						echo "<strong>". $twitter_hashtag ."</strong>";
+						if ($twitter_hashtag != end($twitter_hashtag_array)) {
+							echo " or ";
+						}
+						} ?></li><?php
+						} ?><li id="rumah"><img  width="10px" src="<?php echo url::file_loc('img'); ?>media/img/rumah.jpg" /><a href="<?php echo url::site() . 'reports/submit/'; ?>"><?php echo Kohana::lang('ui_main.report_option_4'); ?></a></li>
+					</ul>
+
+				</div>
+			<?php } ?>
+
+	<br />	
+			<!-- / additional content -->
+
+	<div id="mainmiddle" class="floatbox withright">
+
+	<?php if($site_message != '') { ?>
+		<div class="green-box">
+			<h3><?php echo $site_message; ?></h3>
+		</div>
+	<?php } ?>
+
+		<!-- right column -->
+
+			<!-- category filters -->
+		<!--	<div class="cat-filters clearingfix">
+				<strong><?php echo Kohana::lang('ui_main.category_filter');?> <span>[<a href="javascript:toggleLayer('category_switch_link', 'category_switch')" id="category_switch_link"><?php echo Kohana::lang('ui_main.hide'); ?></a>]</span></strong>
+			</div>
+
+			<ul id="category_switch" class="category-filters">
+				<li><a class="active" id="cat_0" href="#"><span class="swatch" style="background-color:<?php echo "#".$default_map_all;?>"></span><span class="category-title"><?php echo Kohana::lang('ui_main.all_categories');?></span></a></li>
+				<?php
+					foreach ($categories as $category => $category_info)
+					{
+						$category_title = $category_info[0];
+						$category_color = $category_info[1];
+						$category_image = '';
+						$color_css = 'class="swatch" style="background-color:#'.$category_color.'"';
+						if($category_info[2] != NULL) {
+							$category_image = html::image(array(
+								'src'=>$category_info[2],
+								'style'=>'float:left;padding-right:5px;'
+								));
+							$color_css = '';
+						}
+						echo '<li><a href="#" id="cat_'. $category .'"><span '.$color_css.'>'.$category_image.'</span><span class="category-title">'.$category_title.'</span></a>';
+						// Get Children
+						echo '<div class="hide" id="child_'. $category .'">';
+                                                if( sizeof($category_info[3]) != 0)
+                                                {
+                                                    echo '<ul>';
+                                                    foreach ($category_info[3] as $child => $child_info)
+                                                    {
+                                                            $child_title = $child_info[0];
+                                                            $child_color = $child_info[1];
+                                                            $child_image = '';
+                                                            $color_css = 'class="swatch" style="background-color:#'.$child_color.'"';
+                                                            if($child_info[2] != NULL && file_exists(Kohana::config('upload.relative_directory').'/'.$child_info[2])) {
+                                                                    $child_image = html::image(array(
+                                                                            'src'=>Kohana::config('upload.relative_directory').'/'.$child_info[2],
+                                                                            'style'=>'float:left;padding-right:5px;'
+                                                                            ));
+                                                                    $color_css = '';
+                                                            }
+                                                            echo '<li style="padding-left:20px;"><a href="#" id="cat_'. $child .'"><span '.$color_css.'>'.$child_image.'</span><span class="category-title">'.$child_title.'</span></a></li>';
+                                                    }
+                                                    echo '</ul>';
+                                                }
+						echo '</div></li>';
+					}
+				?>
+			</ul> -->
+			<!-- / category filters -->
+<br/><br/>
+
+
+			<?php
+			if ($layers)
+			{
+				?>
+				<!-- Layers (KML/KMZ) -->
+				<div class="cat-filters clearingfix" style="margin-top:20px;">
+					<strong><?php echo Kohana::lang('ui_main.layers_filter');?> <span>[<a href="javascript:toggleLayer('kml_switch_link', 'kml_switch')" id="kml_switch_link"><?php echo Kohana::lang('ui_main.hide'); ?></a>]</span></strong>
+				</div>
+				<ul id="kml_switch" class="category-filters">
+					<?php
+					foreach ($layers as $layer => $layer_info)
+					{
+						$layer_name = $layer_info[0];
+						$layer_color = $layer_info[1];
+						$layer_url = $layer_info[2];
+						$layer_file = $layer_info[3];
+						$layer_link = (!$layer_url) ?
+							url::base().Kohana::config('upload.relative_directory').'/'.$layer_file :
+							$layer_url;
+						echo '<li><a href="#" id="layer_'. $layer .'"
+						onclick="switchLayer(\''.$layer.'\',\''.$layer_link.'\',\''.$layer_color.'\'); return false;"><div class="swatch" style="background-color:#'.$layer_color.'"></div>
+						<div>'.$layer_name.'</div></a></li>';
+					}
+					?>
+				</ul>
+				<!-- /Layers -->
+				<?php
+			}
+			?>
+
+			<?php
+			if ($shares)
+			{
+				?>
+				<!-- Layers (Other Ushahidi Layers) -->
+				<div class="cat-filters clearingfix" style="margin-top:20px;">
+					<strong><?php echo Kohana::lang('ui_main.other_ushahidi_instances');?> <span>[<a href="javascript:toggleLayer('sharing_switch_link', 'sharing_switch')" id="sharing_switch_link"><?php echo Kohana::lang('ui_main.hide'); ?></a>]</span></strong>
+				</div>
+				<ul id="sharing_switch" class="category-filters">
+					<?php
+					foreach ($shares as $share => $share_info)
+					{
+						$sharing_name = $share_info[0];
+						$sharing_color = $share_info[1];
+						echo '<li><a href="#" id="share_'. $share .'"><div class="swatch" style="background-color:#'.$sharing_color.'"></div>
+						<div>'.$sharing_name.'</div></a></li>';
+					}
+					?>
+				</ul>
+				<!-- /Layers -->
+				<?php
+			}
+			?>
+
+			<br />
+
+			
+			<!-- Checkins -->
+			<?php if ( Kohana::config('settings.checkins') ) { ?>
+			<br/>
+			<div class="additional-content">
+				<h5><?php echo Kohana::lang('ui_admin.checkins'); ?></h5>
+				<div id="cilist"></div>
+			</div>
+			<?php } ?>
+			<!-- /Checkins -->
+			
+			<?php
+			// Action::main_sidebar - Add Items to the Entry Page Sidebar
+			Event::run('ushahidi_action.main_sidebar');
+			?>
+	
+		
+		<!-- / right column -->
+	
+		<!-- content column -->
+		<div id="content" class="clearingfix">
+			<div class="floatbox">
+
+				<!-- filters --> <!--
+				<div class="filters clearingfix">
+					<div style="background-color:#3d79d0; padding:10px; color:#fff; float:left; width: 68%; box-shadow: 0 0 5px 1px #888; -moz-box-shadow: 0 0 5px 1px #888">
+						<strong><?php echo Kohana::lang('ui_main.filters'); ?></strong>
+						<ul>
+							<li><a id="media_0" class="active" href="#"><span><?php echo Kohana::lang('ui_main.reports'); ?></span></a></li>
+							<li><a id="media_4" href="#"><span><?php echo Kohana::lang('ui_main.news'); ?></span></a></li>
+							<li><a id="media_1" href="#"><span><?php echo Kohana::lang('ui_main.pictures'); ?></span></a></li>
+							<li><a id="media_2" href="#"><span><?php echo Kohana::lang('ui_main.video'); ?></span></a></li>
+							<li><a id="media_0" href="#"><span><?php echo Kohana::lang('ui_main.all'); ?></span></a></li>
+						</ul>
+					</div>
+
+
+					<?php
+					// Action::main_filters - Add items to the main_filters
+					Event::run('ushahidi_action.map_main_filters');
+					?>
+				</div>
+				<!-- / filters -->
+<!-- category filters -->
+			<div class="cat-filters clearingfix">
+				
+			
+
+			<ul id="category_switch" class="category-filters">
+				<li><a class="active" id="cat_0" href="#"><span class="swatch" style="background-color:<?php echo "#".$default_map_all;?>"></span><span class="category-title"><?php echo Kohana::lang('ui_main.all_categories');?></span></a></li>
+				<?php
+					foreach ($categories as $category => $category_info)
+					{
+						$category_title = $category_info[0];
+						$category_color = $category_info[1];
+						//$category_image = '';
+						$color_css = 'class="swatch" style="background-color:#'.$category_color.'"';
+						if($category_info[2] != NULL) {
+							$category_image = html::image(array(
+								'src'=>$category_info[2],
+								'style'=>'float:left;padding-right:5px;'
+								));
+							$color_css = '';
+						}
+						echo '<li><a href="#" id="cat_'. $category .'"><span class="category-title">'.$category_title.'</span></a>';
+						// Get Children
+						echo '<div class="hide" id="child_'. $category .'">';
+                                                if( sizeof($category_info[3]) != 0)
+                                                {
+                                                    echo '<ul>';
+                                                    foreach ($category_info[3] as $child => $child_info)
+                                                    {
+                                                            $child_title = $child_info[0];
+                                                            $child_color = $child_info[1];
+                                                            $child_image = '';
+                                                            $color_css = 'class="swatch" style="background-color:#'.$child_color.'"';
+                                                            if($child_info[2] != NULL && file_exists(Kohana::config('upload.relative_directory').'/'.$child_info[2])) {
+                                                                    $child_image = html::image(array(
+                                                                            'src'=>Kohana::config('upload.relative_directory').'/'.$child_info[2],
+                                                                            'style'=>'float:left;padding-right:5px;'
+                                                                            ));
+                                                                    $color_css = '';
+                                                            }
+                                                            echo '<li style="padding-left:20px;"><a href="#" id="cat_'. $child .'"><span '.$color_css.'>'.$child_image.'</span><span class="category-title">'.$child_title.'</span></a></li>';
+                                                    }
+                                                    echo '</ul>';
+                                                }
+						echo '</div></li>';
+					}
+				?>
+			</ul>
+</div>
+			<!-- / category filters -->
+
+				<?php								
+				// Map and Timeline Blocks
+				echo $div_map;
+				echo $div_timeline;
+				?>
+				<div class="fb-like-box" data-href="http://www.facebook.com/pages/Korupedia/317438514968335" data-width="292" data-show-faces="true" data-border-color="#fff" data-stream="false" data-header="true"></div>
+	
+			</div>
+		</div>
+		<!-- / content column -->
+
+	</div>
+</div>
+<!-- / main body -->
+
+<!-- content -->
+<div class="content-container">
+
+	<!-- content blocks -->
+	<div class="content-blocks clearingfix" >
+<!--berita dari wp-->
+<ul class="content-column">
+	<li id="block-kusam">
+		<div class="content-block">
+			<table class="table-list">
+			<tr >
+				<h1><a href=http://blog.korupedia.org>Kutipan Samping</a></h1><hr />
+				<td>  <?php require('/home/korupedia.org/blog.korupedia.org/wp-load.php'); query_posts('showposts=2');  if (have_posts()) : while (have_posts()) : the_post(); ?>
+  					
+   						 <h2><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a></h2>
+   						 <span>Posted on <?php the_time('l jS F, Y') ?></span><br />
+  						  <?php the_excerpt(); ?>
+ 					 <hr />
+				  <?php endwhile; else: echo "no posts"; endif; ?>
+ 				 <?php wp_reset_query(); ?>
+<h1>Kolom lainnya</h1>
+  <marquee><?php require('/home/korupedia.org/blog.korupedia.org/wp-load.php'); query_posts('offset=2');  if (have_posts()) : while (have_posts()) : the_post(); ?>
+  					
+   						 <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a>&nbsp | &nbsp
+   						 
+				  <?php endwhile; else: echo "no posts"; endif; ?>
+ 				 <?php wp_reset_query(); ?></marquee></td>
+<!--akhir berita dari wp-->	
+			</tr>
+			</table>
+		</div>
+	</li>	
+	
+			<?php blocks::render(); ?>
+</ul>	
+	</div>
+<div class="content-blocks clearingfix">
+        <ul class="social-widget">
+<li><script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: '#korup',
+  interval: 6000,
+  title: '@korupediaID',
+  subject: 'Ensiklopedia Terbuka Koruptor Indonesia',
+  width: 450,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#ad0000',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#444444',
+      links: '#ad0000'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: true,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: true,
+    behavior: 'all'
+  }
+}).render().start();
+</script>
+</li>
+<li>
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: '#korupsi',
+  interval: 6000,
+  title: '#korupedia',
+  subject: 'Tentang Koruptor',
+  width: 450,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#ad0000',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#444444',
+      links: '#ad0000'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: true,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: true,
+    behavior: 'all'
+  }
+}).render().start();
+</script>		
+</li>
+</ul>
+</div>
+	<!-- /content blocks -->	
+
+</div>
+<!-- content -->
