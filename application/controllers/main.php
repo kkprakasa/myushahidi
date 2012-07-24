@@ -500,17 +500,17 @@ class Main_Controller extends Template_Controller {
 		$this->themes->js->active_endDate = $display_endDate;
 		
 		$this->themes->js->blocks_per_row = Kohana::config('settings.blocks_per_row');
-
-		//$myPacker = new javascriptpacker($js , 'Normal', false, false);
-		//$js = $myPacker->pack();
+	
+			//$myPacker = new javascriptpacker($js , 'Normal', false, false);
+			//$js = $myPacker->pack();
 
 		// Rebuild Header Block
 		$this->template->header->header_block = $this->themes->header_block();
 		
 		//testing yang ini
-		$test_ing = $this->ambil_gambar();
+		$test_ing = $this->halo();
 		//$test_ing = new View('testing');
-		$this->template->content->test_ing = $test_ing;
+		$this->template->content->testing = $test_ing;
 		
 		
 	}
@@ -525,30 +525,34 @@ class Main_Controller extends Template_Controller {
 		}
 	}
 	
-	//fungsi tambahan untuk mengambil image incident
-	public function ambil_gambar()
-	{
-		//$gambar = array();
-		
-		$data = new Database();
-		$ambil = $data->query('SELECT media_thumb,media_link FROM media');
-		foreach ($ambil as $gambar)
-		{
-			foreach($gambar as $kaka => $nilai)
-			{
-				return $nilai;
-				//echo "<img src="/media/.$nilai. "> <br />";
-			}
-		}
-		//$this->template->content->nilais = $nilai;
-	}
-	
+	//fungsi tambahan untuk mengambil image incident	
 	public function halo()
 	{
-		$test = "hello world";
-		//$test_ing = new View('testing');
-		$this->template->content->test = $test;
-		//return $test;
+		$aksi = ORM::factory('incident')
+				->where('id')
+				->where('incident_active',1)
+				->find_all();
+		
+		//mengambil foto kejadian
+		$foto = array();
+		$id = array();
+		foreach($aksi as $aksis)
+		{
+			
+			foreach($aksis->media as $media)
+			{
+					if($media->media_type == 1)
+				{
+					$foto[] = url::convert_uploaded_to_abs($media->media_thumb);
+				}
+				
+			}
+			$id[] = $aksis->id;
+		}
+		$this->template->content->foto = $foto;
+		$this->template->content->id = $id;
 	}
 
 } // End Main
+
+
